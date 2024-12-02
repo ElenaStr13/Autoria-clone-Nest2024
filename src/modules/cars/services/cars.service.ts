@@ -38,7 +38,7 @@ export class CarsService {
         where: { name: model, brand: { id: brand.id } },
         relations: ['brand'],
       });
-      const nameModel = model;
+      const nameModel = model; //model.name
       if (!existingModel) {
         existingModel = await this.carRepository.save(
           this.carRepository.create({
