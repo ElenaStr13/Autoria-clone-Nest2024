@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import {
+  IsArray,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -12,6 +13,7 @@ import {
 
 import { TransformHelper } from '../../../../../common/helpers/transform.helper';
 import { LocationEnum } from '../../enums/location.enum';
+import { ModelReqDto } from './model.req.dto';
 
 export class CreateCarReqDto {
   @ApiProperty({
@@ -23,12 +25,22 @@ export class CreateCarReqDto {
   @Length(3, 50)
   name?: string;
 
-  @Transform(TransformHelper.trim)
-  @Transform(TransformHelper.toLowerCase)
-  @IsString()
-  @Length(3, 50)
-  @IsNotEmpty()
-  model: string;
+  @ApiProperty({
+    example: [{ name: 'Captur' }],
+    description: 'Моделі автомобілів',
+    type: [ModelReqDto], // Вказуємо тип як масив ModelReqDto
+  })
+  @IsArray()
+  //@ValidateNested({ each: true })
+  @Type(() => ModelReqDto) // Трансформуємо до ModelReqDto
+  model: ModelReqDto[]; // Тепер це масив ModelReqDto
+
+  // @Transform(TransformHelper.trim)
+  // @Transform(TransformHelper.toLowerCase)
+  // @IsString()
+  // @Length(3, 50)
+  // @IsNotEmpty()
+  // model: string;
 
   @ApiProperty({ example: 2021 })
   @Type(() => Number)
